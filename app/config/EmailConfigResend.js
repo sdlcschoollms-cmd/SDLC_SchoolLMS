@@ -12,7 +12,7 @@
 //         html
 //     });
 
-//     console.log("Resend API Response:", emailSend); // 👈 ADD THIS
+//     console.log("Resend API Response:", emailSend);
 //     return emailSend;
 //     } catch (error) {
 //         console.error("Resend Error:", error);
