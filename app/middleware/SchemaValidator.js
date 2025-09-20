@@ -11,7 +11,7 @@ const userSchemaValidator = Joi.object({
     studentClass: Joi.when("role", {
         is: "student",
         then: Joi.string().required(),
-        otherwise: Joi.forbidden()
+        otherwise: Joi.string().allow("",null).strip()
     })
 });
 
