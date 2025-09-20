@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const generateTokens = require("../helper/GenerateTokens");
 const jwt = require("jsonwebtoken");
 const transporter = require("../config/EmailConfig");
+// const { sendEmail } = require("../config/EmailConfigResend");
 
 class UserController {
 
@@ -54,13 +55,19 @@ class UserController {
             studentClass: role === "student" ? studentClass : undefined
         }).save();
 
-        //send a welcome message to mail
+        // send a welcome message to mail
         transporter.sendMail({
             from: process.env.EMAIL_FROM,
             to: newUser.email,
             subject: "Welcome Message",
             html: `<b><p>Welcome ${newUser.firstName},you have successfully registered to our website</p></b>`
         });
+
+        // await sendEmail({
+        //     to: newUser.email,
+        //     subject: "Welcome Message",
+        //     html: `<b><p>Welcome ${newUser.firstName},you have successfully registered to our website</p></b>` 
+        // });
 
         //sending final json response
         return res.status(200).json({
@@ -202,13 +209,20 @@ class UserController {
         // Reset Link and this link generate by frontend developer
         const resetLink = `${process.env.FRONTEND_HOST}/account/reset-password/${user._id}/${token}`;
 
-        // Send password reset email  
+        // Send password reset email via nodemailer
         transporter.sendMail({
             from: process.env.EMAIL_FROM,
             to: user.email,
             subject: "Password Reset Link",
             html: `<p>Hello ${user.firstName},</p><p>Please <a href="${resetLink}">Click here</a> to reset your password.</p>`
         });
+
+        // Send password reset email via resend
+        // await sendEmail({
+        //     to: user.email,
+        //     subject: "Password Reset Link",
+        //     html: `<p>Hello ${user.firstName},</p><p>Please <a href="${resetLink}">Click here</a> to reset your password.</p>` 
+        // });
 
         // Send success response
         res.status(200).json({
